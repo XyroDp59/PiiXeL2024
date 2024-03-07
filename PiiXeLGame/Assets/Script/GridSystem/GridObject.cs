@@ -6,7 +6,7 @@ namespace Script.GridSystem
     public class GridObject : MonoBehaviour, IHoverable, IClickable, IRightClickable, IContactable
     {
         [SerializeField] private bool isVisible;
-        [SerializeField] private GameGrid grid;
+        [SerializeField] protected GameGrid grid;
         [SerializeField] private GameObject portal;
         [SerializeField] private bool blockCurrentCase;
 
