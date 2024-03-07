@@ -8,9 +8,9 @@ namespace Script.GridSystem.Drawer
         public void DrawGrid(GameObject lineContainer, int gridSize, float cellSize, Color lineColor, float lineWidth)
         {
             float sqrt3 = Mathf.Sqrt(3f);
-            for (int i = 0; i <= gridSize; i++)
+            for (int i = 0; i <= gridSize / 2 + 1; i++)
             {
-                for (int j = 0; j <= gridSize; j++)
+                for (int j = 0; j <= gridSize / 2 + 1; j++)
                 {
                     Vector3 center = new Vector3(i * 1.5f * cellSize, j * sqrt3 * cellSize, 0f);
                     if (i % 2 == 1)
