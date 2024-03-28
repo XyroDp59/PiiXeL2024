@@ -9,7 +9,7 @@ namespace Script.Inventory
         public float healthBoost;
         public float speedBoost;
         public float sleepBoost;
-        public GridObject grid;
+        public GameGrid grid;
         public Body bodypart;
         public enum Body //I added these parts by default, feel free to change
         {

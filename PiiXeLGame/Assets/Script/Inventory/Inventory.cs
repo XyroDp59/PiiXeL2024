@@ -21,12 +21,14 @@ namespace Script.Inventory
             _equipment = new List<EquipmentItem>();
             _itemPos = new Vector2();
             _spriteRenderer = GetComponent<SpriteRenderer>();
+            _spriteRenderer.enabled = false;
         }
 
         public void AddToInventory(Item newItem)
         {
-            if (_bag.Contains(newItem)) newItem.number += 1;
-            else _bag.Add(newItem);
+            newItem.GetComponent<SpriteRenderer>().enabled = false;
+            newItem.number += 1;
+            if (!_bag.Contains(newItem)) _bag.Add(newItem);
         }
 
         public void RemoveFromInventory(Item discardedItem)
@@ -34,7 +36,11 @@ namespace Script.Inventory
             if (_bag.Contains(discardedItem))
             {
                 discardedItem.number -= 1;
-                if(discardedItem.number == 0) _bag.Remove(discardedItem);
+                if(discardedItem.number == 0)
+                {
+                    discardedItem.HideItem();
+                    _bag.Remove(discardedItem);
+                }
             }
         }
 
