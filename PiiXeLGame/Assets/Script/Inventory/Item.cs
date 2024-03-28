@@ -25,8 +25,11 @@ namespace Script.Inventory
             transform.position = position;
             _rectTransform.position = position;
             _spriteRenderer.enabled = true;
-            amount.enabled = true;
-            amount.text = $"{number}";
+            if (this.GetType() != typeof(EquipmentItem))
+            {
+                amount.enabled = true;
+                amount.text = $"{number}";
+            }
         }
 
         public void HideItem()

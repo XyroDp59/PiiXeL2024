@@ -8,6 +8,7 @@ namespace Script.Inventory
         [SerializeField] private Item item1;
         [SerializeField] private Item item2;
         [SerializeField] private Item item3;
+        [SerializeField] private Item item4;
         private KeyCode _invKey = KeyCode.I;
         private KeyCode _addKey = KeyCode.A;
         private KeyCode _removeKey = KeyCode.R;
@@ -18,6 +19,7 @@ namespace Script.Inventory
             inv.AddToInventory(item1);
             inv.AddToInventory(item2);
             inv.AddToInventory(item3);
+            inv.AddToInventory(item4);
         }
 
         private void TestAdd()
