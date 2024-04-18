@@ -30,6 +30,10 @@ namespace Script.Inventory
                 amount.enabled = true;
                 amount.text = $"{number}";
             }
+            else
+            {
+                amount.enabled = false;
+            }
         }
 
         public void HideItem()
@@ -40,7 +44,8 @@ namespace Script.Inventory
 
         public void UseItem()
         {
-            //TODO à implémenter
+            Debug.Log("Not overriden method");
+            return;
         }
     }
 }
