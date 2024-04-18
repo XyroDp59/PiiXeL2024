@@ -5,7 +5,7 @@ namespace Script.GridSystem
 {
     public class GameGrid : MonoBehaviour
     {
-        [SerializeField] public GridType gridType { get; private set; }
+        [SerializeField] public GridType gridType ;
         [SerializeField] private int gridSize;
         [SerializeField] public float cellSize;
         [SerializeField] private Color lineColor = Color.white;
