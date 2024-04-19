@@ -27,6 +27,7 @@ namespace Script.Inventory
         private SpriteRenderer _selectorRenderer;
         private int _selectedPosInBag;
         private bool _canChangeSelection = true;
+        private bool _selectedIsEquipment;
 
         private void Start()
         {
@@ -134,10 +135,12 @@ namespace Script.Inventory
                 iter += 1;
             }
 
+            itemDescriptionText.enabled = true;
             if (_selectedItem)
             {
                 _selectTransform.position = _selectedItem.transform.position;
                 _selectorRenderer.enabled = true;
+                itemDescriptionText.text = _selectedItem.description;
             }
         }
 
@@ -155,6 +158,8 @@ namespace Script.Inventory
             {
                 possessedEquipment.HideItem();
             }
+
+            itemDescriptionText.enabled = false;
         }
 
         public void UseSelectedItem()
@@ -168,28 +173,42 @@ namespace Script.Inventory
         public void ChangeSelection(int verticalAmount, int horizontalAmount)
         {
             if (!_canChangeSelection) return;
-            
+
+            int equipmentAmount = _equipment.Count;
             int itemAmount = _bag.Count;
             int lastRawAmount = itemAmount % colCount;
-            int lineAmount;
 
-            verticalAmount = _selectedPosInBag / colCount + verticalAmount;
+            verticalAmount = _selectedIsEquipment ? equipmentAmount : _selectedPosInBag / colCount + verticalAmount;
             verticalAmount %= (itemAmount / colCount) + (itemAmount % colCount - 1 >= _selectedPosInBag % colCount ? 1 : 0);
             if (verticalAmount < 0) verticalAmount += itemAmount / colCount + 1;
             
-            lineAmount = verticalAmount == itemAmount / colCount ? lastRawAmount : colCount;
-            Debug.Log(verticalAmount);
-            Debug.Log(lineAmount);
-            
-            horizontalAmount = (horizontalAmount % lineAmount + _selectedPosInBag % lineAmount) % lineAmount;
+            int lineAmount = (verticalAmount == itemAmount / colCount ? lastRawAmount : colCount) + 1;
+            if (equipmentAmount == 0) lineAmount -= 1;
+            //Debug.Log(verticalAmount);
+            //Debug.Log(lineAmount);
+
+            int curHorPos = _selectedIsEquipment ? colCount : _selectedPosInBag % lineAmount;
+            //Debug.Log(curHorPos);
+            horizontalAmount = (horizontalAmount % lineAmount + curHorPos) % lineAmount;
             if (horizontalAmount < 0) horizontalAmount += lineAmount;
+            _selectedIsEquipment = (horizontalAmount == lineAmount - 1 && equipmentAmount != 0);
             //Debug.Log(horizontalAmount);
+            //Debug.Log(equipmentAmount);
+            //Debug.Log(lineAmount);
             
-            _selectedPosInBag = verticalAmount * colCount + horizontalAmount;
+            if(_selectedIsEquipment)
+            {
+                _selectedItem = _equipment[verticalAmount];
+            }
             
-            if (_selectedPosInBag > itemAmount) _selectedPosInBag = itemAmount;
-            _selectedItem = _bag[_selectedPosInBag];
-            
+            else
+            {
+                _selectedPosInBag = verticalAmount * colCount + horizontalAmount;
+
+                if (_selectedPosInBag > itemAmount) _selectedPosInBag = itemAmount;
+                _selectedItem = _bag[_selectedPosInBag];
+            }
+
             itemDescriptionText.text = _selectedItem.description;
             if(_isDisplayed) DrawInventory();
             StartCoroutine(SelectionSwitchDelay());

@@ -42,10 +42,9 @@ namespace Script.Inventory
             amount.enabled = false;
         }
 
-        public void UseItem()
+        public virtual void UseItem()
         {
             Debug.Log("Not overriden method");
-            return;
         }
     }
 }

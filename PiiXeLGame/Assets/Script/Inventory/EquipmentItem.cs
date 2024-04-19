@@ -1,4 +1,5 @@
 using Script.GridSystem;
+using UnityEngine;
 
 namespace Script.Inventory
 {
@@ -18,6 +19,12 @@ namespace Script.Inventory
             Pants,
             Shoes,
             Accessory
+        }
+
+        public override void UseItem()
+        {
+            Debug.Log("overriden method");
+            //TODO to actually implement
         }
     }
 }
