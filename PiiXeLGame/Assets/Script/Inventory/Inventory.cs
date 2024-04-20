@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,7 +12,6 @@ namespace Script.Inventory
         [SerializeField] private float originEquipmentY;
         [SerializeField] private float infoDisplayX;
         [SerializeField] private float infoDisplayY;
-        [SerializeField] private float selectionDelay;
         [SerializeField] private int colCount;
         [SerializeField] private GameObject selector;
         [SerializeField] private TMP_Text itemDescriptionText;
@@ -27,7 +25,8 @@ namespace Script.Inventory
         private SpriteRenderer _spriteRenderer;
         private Transform _selectTransform;
         private int _selectedPosInBag;
-        private bool _canChangeSelection = true;
+        private int _selectedPosInEquipment;
+        private int _firstDrawnLine;
         private bool _selectedIsEquipment;
         private bool _isDisplayed;
 
@@ -53,8 +52,8 @@ namespace Script.Inventory
             newItem.GetComponent<SpriteRenderer>().enabled = false;
             newItem.number += 1;
             if (!_bag.Contains(newItem)) _bag.Add(newItem);
-            
-            if(_isDisplayed) DrawInventory();
+
+            if (_isDisplayed) DrawInventory(_firstDrawnLine);
         }
 
         public void RemoveFromInventory(Item discardedItem)
@@ -70,11 +69,12 @@ namespace Script.Inventory
                     {
                         _selectedItem = _bag[0];
                         _selectedPosInBag = 0;
-                        ChangeSelection(0,0);
+                        ChangeSelection(0, 0);
                     }
                 }
             }
-            if(_isDisplayed) DrawInventory();
+
+            if (_isDisplayed) DrawInventory(_firstDrawnLine);
         }
 
         public void RemoveEquipment(EquipmentItem equippedItem)
@@ -83,8 +83,8 @@ namespace Script.Inventory
             AddToInventory(equippedItem);
             if (_isDisplayed)
             {
-                DrawInventory();
-                ChangeSelection(0,0);
+                DrawInventory(_firstDrawnLine);
+                ChangeSelection(0, 0);
             }
         }
 
@@ -104,12 +104,13 @@ namespace Script.Inventory
 
                 _equipment.Add(equippedItem);
             }
-            if(_isDisplayed) DrawInventory();
-            //Debug.Log(_equipment.Count);
+
+            if (_isDisplayed) DrawInventory(_firstDrawnLine);
         }
 
-        public void DrawInventory(int firstDrawnItem = 0)
+        public void DrawInventory(int firstDrawnLine = 0)
         {
+            _firstDrawnLine = firstDrawnLine;
             _isDisplayed = true;
             _spriteRenderer.enabled = true;
             int iter = 0;
@@ -125,6 +126,12 @@ namespace Script.Inventory
             _itemPos.y = originY;
             foreach (Item possessedItem in _bag)
             {
+                if (iter / colCount < firstDrawnLine)
+                {
+                    iter += 1;
+                    continue;
+                }
+
                 if (iter % colCount == 0)
                 {
                     _itemPos.x = originX;
@@ -176,52 +183,48 @@ namespace Script.Inventory
 
         public void ChangeSelection(int verticalAmount, int horizontalAmount)
         {
-            if (!_canChangeSelection) return;
-
             int equipmentAmount = _equipment.Count;
             int itemAmount = _bag.Count;
             int lastRawAmount = itemAmount % colCount;
+            int nonModifiedVerticalPos = verticalAmount;
 
-            verticalAmount = _selectedIsEquipment ? equipmentAmount : _selectedPosInBag / colCount + verticalAmount;
-            verticalAmount %= (itemAmount / colCount) + (itemAmount % colCount - 1 >= _selectedPosInBag % colCount ? 1 : 0);
-            if (verticalAmount < 0) verticalAmount += itemAmount / colCount + 1;
+
+            verticalAmount = _selectedPosInBag / colCount + verticalAmount;
+            verticalAmount %= 
+                (itemAmount / colCount) + (itemAmount % colCount - 1 >= _selectedPosInBag % colCount ? 1 : 0);
             
+            if (verticalAmount < 0) verticalAmount += _selectedPosInBag % colCount > lastRawAmount - 1
+                    ? itemAmount / colCount
+                    : itemAmount / colCount + 1;
+
+
             int itemsInLine = (verticalAmount == itemAmount / colCount ? lastRawAmount : colCount) + 1;
             if (equipmentAmount == 0) itemsInLine -= 1;
-            //Debug.Log(verticalAmount);
-            //Debug.Log(itemsInLine);
 
             int curHorPos = _selectedIsEquipment ? colCount : _selectedPosInBag % colCount;
-            //Debug.Log(curHorPos);
             horizontalAmount = (horizontalAmount % itemsInLine + curHorPos) % itemsInLine;
             if (horizontalAmount < 0) horizontalAmount += itemsInLine;
             _selectedIsEquipment = (horizontalAmount == itemsInLine - 1 && equipmentAmount != 0);
-            //Debug.Log(horizontalAmount);
-            //Debug.Log(equipmentAmount);
-            
-            if(_selectedIsEquipment)
+
+            if (_selectedIsEquipment)
             {
-                _selectedItem = _equipment[verticalAmount];
+                _selectedPosInEquipment = (nonModifiedVerticalPos + _selectedPosInEquipment) % equipmentAmount;
+                if (_selectedPosInEquipment < 0) _selectedPosInEquipment += equipmentAmount;
+                _selectedItem = _equipment[_selectedPosInEquipment];
+                _selectedPosInBag = _selectedPosInEquipment * colCount;
+                if (_selectedPosInBag >= itemAmount) _selectedPosInBag = itemAmount - 1;
             }
-            
+
             else
             {
                 _selectedPosInBag = verticalAmount * colCount + horizontalAmount;
-
                 if (_selectedPosInBag > itemAmount) _selectedPosInBag = itemAmount;
                 _selectedItem = _bag[_selectedPosInBag];
+                _selectedPosInEquipment = verticalAmount >= equipmentAmount ? equipmentAmount - 1 : verticalAmount;
             }
-
+            
             itemDescriptionText.text = _selectedItem.description;
-            if(_isDisplayed) DrawInventory();
-            StartCoroutine(SelectionSwitchDelay());
-        }
-
-        private IEnumerator SelectionSwitchDelay()
-        {
-            _canChangeSelection = false;
-            yield return new WaitForSeconds(selectionDelay);
-            _canChangeSelection = true;
+            if (_isDisplayed) DrawInventory(_firstDrawnLine);
         }
     }
 }
