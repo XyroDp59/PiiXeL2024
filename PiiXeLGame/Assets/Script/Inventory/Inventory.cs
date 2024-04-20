@@ -9,25 +9,27 @@ namespace Script.Inventory
     {
         [SerializeField] private float originX;
         [SerializeField] private float originY;
-        [SerializeField] private float originEquipment;
-        [SerializeField] private int colCount;
+        [SerializeField] private float originEquipmentX;
+        [SerializeField] private float originEquipmentY;
         [SerializeField] private float infoDisplayX;
         [SerializeField] private float infoDisplayY;
+        [SerializeField] private float selectionDelay;
+        [SerializeField] private int colCount;
         [SerializeField] private GameObject selector;
         [SerializeField] private TMP_Text itemDescriptionText;
-        private Transform _selectTransform;
         public int bagSize;
         public Vector2 itemSize;
+        private Vector2 _itemPos;
+        private Item _selectedItem;
         private List<Item> _bag;
         private List<EquipmentItem> _equipment;
-        private Vector2 _itemPos;
-        private SpriteRenderer _spriteRenderer;
-        private Item _selectedItem;
-        private bool _isDisplayed;
         private SpriteRenderer _selectorRenderer;
+        private SpriteRenderer _spriteRenderer;
+        private Transform _selectTransform;
         private int _selectedPosInBag;
         private bool _canChangeSelection = true;
         private bool _selectedIsEquipment;
+        private bool _isDisplayed;
 
         private void Start()
         {
@@ -103,21 +105,23 @@ namespace Script.Inventory
                 _equipment.Add(equippedItem);
             }
             if(_isDisplayed) DrawInventory();
+            //Debug.Log(_equipment.Count);
         }
 
-        public void DrawInventory()
+        public void DrawInventory(int firstDrawnItem = 0)
         {
             _isDisplayed = true;
             _spriteRenderer.enabled = true;
             int iter = 0;
-            _itemPos.x = originX;
-            _itemPos.y = originEquipment;
+            _itemPos.x = originEquipmentX;
+            _itemPos.y = originEquipmentY;
             foreach (EquipmentItem possessedEquipment in _equipment)
             {
                 possessedEquipment.DrawItemInIventory(_itemPos);
                 _itemPos.y += itemSize.y;
             }
 
+            _itemPos.x = originX;
             _itemPos.y = originY;
             foreach (Item possessedItem in _bag)
             {
@@ -182,19 +186,18 @@ namespace Script.Inventory
             verticalAmount %= (itemAmount / colCount) + (itemAmount % colCount - 1 >= _selectedPosInBag % colCount ? 1 : 0);
             if (verticalAmount < 0) verticalAmount += itemAmount / colCount + 1;
             
-            int lineAmount = (verticalAmount == itemAmount / colCount ? lastRawAmount : colCount) + 1;
-            if (equipmentAmount == 0) lineAmount -= 1;
+            int itemsInLine = (verticalAmount == itemAmount / colCount ? lastRawAmount : colCount) + 1;
+            if (equipmentAmount == 0) itemsInLine -= 1;
             //Debug.Log(verticalAmount);
-            //Debug.Log(lineAmount);
+            //Debug.Log(itemsInLine);
 
-            int curHorPos = _selectedIsEquipment ? colCount : _selectedPosInBag % lineAmount;
+            int curHorPos = _selectedIsEquipment ? colCount : _selectedPosInBag % colCount;
             //Debug.Log(curHorPos);
-            horizontalAmount = (horizontalAmount % lineAmount + curHorPos) % lineAmount;
-            if (horizontalAmount < 0) horizontalAmount += lineAmount;
-            _selectedIsEquipment = (horizontalAmount == lineAmount - 1 && equipmentAmount != 0);
+            horizontalAmount = (horizontalAmount % itemsInLine + curHorPos) % itemsInLine;
+            if (horizontalAmount < 0) horizontalAmount += itemsInLine;
+            _selectedIsEquipment = (horizontalAmount == itemsInLine - 1 && equipmentAmount != 0);
             //Debug.Log(horizontalAmount);
             //Debug.Log(equipmentAmount);
-            //Debug.Log(lineAmount);
             
             if(_selectedIsEquipment)
             {
@@ -217,7 +220,7 @@ namespace Script.Inventory
         private IEnumerator SelectionSwitchDelay()
         {
             _canChangeSelection = false;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(selectionDelay);
             _canChangeSelection = true;
         }
     }

@@ -7,7 +7,6 @@ namespace Script.Inventory
     {
         [SerializeField] private TMP_Text amount;
         private RectTransform _rectTransform;
-        public Sprite inventoryImage;
         public int number;
         public string itemName; //didn't name it 'name' cuz that's already a property of GameObjects
         public string description;
