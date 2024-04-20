@@ -12,10 +12,10 @@ namespace Script.Inventory
         [SerializeField] private float originEquipmentY;
         [SerializeField] private float infoDisplayX;
         [SerializeField] private float infoDisplayY;
-        [SerializeField] private int colCount;
         [SerializeField] private GameObject selector;
         [SerializeField] private TMP_Text itemDescriptionText;
         public int bagSize;
+        public int colCount;
         public Vector2 itemSize;
         private Vector2 _itemPos;
         private Item _selectedItem;

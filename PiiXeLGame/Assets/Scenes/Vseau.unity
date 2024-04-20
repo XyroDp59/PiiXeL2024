@@ -2215,7 +2215,6 @@ MonoBehaviour:
   originEquipmentY: 1.5
   infoDisplayX: 0
   infoDisplayY: 0
-  selectionDelay: 0
   colCount: 3
   selector: {fileID: 767173457}
   itemDescriptionText: {fileID: 1945343038}
