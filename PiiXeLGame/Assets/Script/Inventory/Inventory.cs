@@ -67,11 +67,16 @@ namespace Script.Inventory
                     _bag.Remove(discardedItem);
                     if (discardedItem == _selectedItem)
                     {
-                        _selectedItem = _bag[0];
-                        _selectedPosInBag = 0;
+                        if (_bag.Count != 0)
+                        {
+                            _selectedItem = _bag[0];
+                            _selectedPosInBag = 0;
+                        }
                         ChangeSelection(0, 0);
                     }
                 }
+
+                if (_bag.Count == 0 && _equipment.Count == 0) _selectorRenderer.enabled = false;
             }
 
             if (_isDisplayed) DrawInventory(_firstDrawnLine);
@@ -150,8 +155,11 @@ namespace Script.Inventory
             if (_selectedItem)
             {
                 _selectTransform.position = _selectedItem.transform.position;
-                _selectorRenderer.enabled = true;
-                itemDescriptionText.text = _selectedItem.description;
+                if (!(_bag.Count == 0 && _equipment.Count == 0))
+                {
+                    _selectorRenderer.enabled = true;
+                    itemDescriptionText.text = _selectedItem.description;
+                }
             }
         }
 
@@ -188,15 +196,25 @@ namespace Script.Inventory
             int lastRawAmount = itemAmount % colCount;
             int nonModifiedVerticalPos = verticalAmount;
 
+            if (equipmentAmount == 0 && itemAmount == 0)
+            {
+                _selectorRenderer.enabled = false;
+                return;
+            }
 
-            verticalAmount = _selectedPosInBag / colCount + verticalAmount;
-            verticalAmount %= 
-                (itemAmount / colCount) + (itemAmount % colCount - 1 >= _selectedPosInBag % colCount ? 1 : 0);
-            
-            if (verticalAmount < 0) verticalAmount += _selectedPosInBag % colCount > lastRawAmount - 1
-                    ? itemAmount / colCount
-                    : itemAmount / colCount + 1;
+            _selectorRenderer.enabled = true;
 
+            if (itemAmount != 0)
+            {
+                verticalAmount = _selectedPosInBag / colCount + verticalAmount;
+                verticalAmount %=
+                    (itemAmount / colCount) + (itemAmount % colCount - 1 >= _selectedPosInBag % colCount ? 1 : 0);
+
+                if (verticalAmount < 0)
+                    verticalAmount += _selectedPosInBag % colCount > lastRawAmount - 1
+                        ? itemAmount / colCount
+                        : itemAmount / colCount + 1;
+            }
 
             int itemsInLine = (verticalAmount == itemAmount / colCount ? lastRawAmount : colCount) + 1;
             if (equipmentAmount == 0) itemsInLine -= 1;
@@ -204,7 +222,7 @@ namespace Script.Inventory
             int curHorPos = _selectedIsEquipment ? colCount : _selectedPosInBag % colCount;
             horizontalAmount = (horizontalAmount % itemsInLine + curHorPos) % itemsInLine;
             if (horizontalAmount < 0) horizontalAmount += itemsInLine;
-            _selectedIsEquipment = (horizontalAmount == itemsInLine - 1 && equipmentAmount != 0);
+            _selectedIsEquipment = (horizontalAmount == itemsInLine - 1 && equipmentAmount != 0) || itemAmount == 0;
 
             if (_selectedIsEquipment)
             {
