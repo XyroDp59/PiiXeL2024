@@ -73,8 +73,8 @@ namespace Script.Inventory
                     {
                         if (_bag.Count != 0)
                         {
-                            _selectedItem = _bag[0];
-                            _selectedPosInBag = 0;
+                            if(_selectedPosInBag == _bag.Count) _selectedPosInBag -= 1;
+                            _selectedItem = _bag[_selectedPosInBag];
                         }
                         ChangeSelection(0, 0);
                     }
@@ -187,6 +187,12 @@ namespace Script.Inventory
 
         public void UseSelectedItem()
         {
+            if (_selectedItem is EquipmentItem)
+            {
+                if(_selectedIsEquipment) RemoveEquipment((EquipmentItem)_selectedItem);
+                else AddOrReplaceEquipment((EquipmentItem)_selectedItem);
+            }
+            
             if (_selectedItem)
             {
                 _selectedItem.UseItem();
