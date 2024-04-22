@@ -41,7 +41,7 @@ namespace Script.Inventory
             _selectorRenderer = selector.GetComponent<SpriteRenderer>();
         }
 
-        public void AddToInventory(Item newItem)
+        public void AddToInventory(Item newItem, int amount = 1)
         {
             if (!_selectedItem)
             {
@@ -50,11 +50,11 @@ namespace Script.Inventory
             }
 
             newItem.GetComponent<SpriteRenderer>().enabled = false;
-            newItem.number += 1;
+            newItem.number += amount;
             if (!_bag.Contains(newItem))
             {
                 _bag.Add(newItem);
-                newItem.number = 1;
+                newItem.number = amount;
             }
 
             if (_isDisplayed) DrawInventory(_firstDrawnLine);
