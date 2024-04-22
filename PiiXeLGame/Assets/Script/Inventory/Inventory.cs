@@ -93,12 +93,11 @@ namespace Script.Inventory
             if (_isDisplayed)
             {
                 DrawInventory(_firstDrawnLine);
-                if (_selectedPosInEquipment == _equipment.Count)
+                if (_selectedPosInEquipment == _equipment.Count && _equipment.Count != 0)
                 {
                     _selectedPosInEquipment -= 1;
                 }
-
-                _selectedItem = _equipment[_selectedPosInEquipment];
+                
                 ChangeSelection(0, 0);
             }
         }
