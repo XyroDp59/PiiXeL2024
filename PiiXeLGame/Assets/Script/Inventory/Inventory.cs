@@ -93,6 +93,12 @@ namespace Script.Inventory
             if (_isDisplayed)
             {
                 DrawInventory(_firstDrawnLine);
+                if (_selectedPosInEquipment == _equipment.Count)
+                {
+                    _selectedPosInEquipment -= 1;
+                }
+
+                _selectedItem = _equipment[_selectedPosInEquipment];
                 ChangeSelection(0, 0);
             }
         }
@@ -228,12 +234,12 @@ namespace Script.Inventory
 
             int itemsInLine = (verticalAmount == itemAmount / colCount ? lastRawAmount : colCount) + 1;
             if (equipmentAmount == 0) itemsInLine -= 1;
-
-            int curHorPos = _selectedIsEquipment ? colCount : _selectedPosInBag % colCount;
+            
+            int curHorPos = _selectedIsEquipment ? itemsInLine - 1 : _selectedPosInBag % colCount;
             horizontalAmount = (horizontalAmount % itemsInLine + curHorPos) % itemsInLine;
             if (horizontalAmount < 0) horizontalAmount += itemsInLine;
             _selectedIsEquipment = (horizontalAmount == itemsInLine - 1 && equipmentAmount != 0) || itemAmount == 0;
-
+            
             if (_selectedIsEquipment)
             {
                 _selectedPosInEquipment = (nonModifiedVerticalPos + _selectedPosInEquipment) % equipmentAmount;
