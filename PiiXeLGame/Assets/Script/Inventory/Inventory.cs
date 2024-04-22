@@ -51,7 +51,11 @@ namespace Script.Inventory
 
             newItem.GetComponent<SpriteRenderer>().enabled = false;
             newItem.number += 1;
-            if (!_bag.Contains(newItem)) _bag.Add(newItem);
+            if (!_bag.Contains(newItem))
+            {
+                _bag.Add(newItem);
+                newItem.number = 1;
+            }
 
             if (_isDisplayed) DrawInventory(_firstDrawnLine);
         }
