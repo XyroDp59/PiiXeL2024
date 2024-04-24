@@ -81,15 +81,19 @@ namespace Script.GridSystem
 
                 if(grid.gridType==GridType.Triangle)
                 {
-                    /* TODO : Fix la grid triangle */
-                    float theta = Mathf.Atan((cellPosition.y - position.y) / (cellPosition.x - position.x));
-                    if (cellPosition.x - position.x < 0) theta += Mathf.PI/2;
-                    theta -= theta % (Mathf.PI/3) - Mathf.PI/6;
-                    Debug.Log(theta);
-                    cellPosition += grid.cellSize * sqrt3/3 * new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0);
+                    /* marche 95% du temps ? */
+                    float theta;
+                    if (position.x == cellPosition.x) theta = Mathf.Sign(cellPosition.y - position.y) * Mathf.PI / 2f;
+                    else theta = Mathf.Atan((cellPosition.y - position.y) / (cellPosition.x - position.x));
+                    if (position.x - cellPosition.x < 0) theta += Mathf.PI;
+                    Debug.Log(theta / Mathf.PI + " - " + theta % (Mathf.PI / 3f) + " - " + (-1f/6f));
+                    theta += 2 * Mathf.PI;
+                    theta -= theta % (Mathf.PI/3f) - Mathf.PI/6f;
+                    Debug.Log(theta / Mathf.PI);
+                    cellPosition += grid.cellSize * sqrt3/3f * new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0);
                 }
             }
-             
+            if (Vector2.Distance(cellPosition, position) < 0.1) return;
             position = cellPosition;
             transform.position = position;
         }

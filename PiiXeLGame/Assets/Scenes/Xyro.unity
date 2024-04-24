@@ -152,9 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84fda228233904f41934d50d5b524843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridType: 1
+  gridType: 2
   gridSize: 5
   cellSize: 5
+  distBetweenCells: 0
   lineColor: {r: 1, g: 1, b: 1, a: 1}
   lineWidth: 0.1
 --- !u!4 &548338899
@@ -343,7 +344,7 @@ Transform:
   m_GameObject: {fileID: 1414933302}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: -0.2, z: 0}
+  m_LocalPosition: {x: 5.2, y: 18.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -359,13 +360,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1414933302}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b188040b82978e4f9dd7a28e040a6c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d995f63daed29542b879b23fb9b007d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isVisible: 1
   grid: {fileID: 548338898}
   portal: {fileID: 0}
-  blockCurrentCase: 1
+  blockCurrentCase: 0
+  actionFrequency: 40
+  movementSpeed: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

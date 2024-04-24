@@ -8,6 +8,7 @@ namespace Script.GridSystem
         [SerializeField] public GridType gridType ;
         [SerializeField] private int gridSize;
         [SerializeField] public float cellSize;
+        public float distBetweenCells;
         [SerializeField] private Color lineColor = Color.white;
         [SerializeField] private float lineWidth = 0.1f;
 
@@ -17,6 +18,14 @@ namespace Script.GridSystem
         {
             _gridDrawer = GetGridDrawer();
             DrawGrid();
+
+            switch (gridType)
+            {
+                case GridType.Hexagon: distBetweenCells = cellSize * Mathf.Sqrt(3); break;
+                case GridType.Square: distBetweenCells = cellSize; break;
+                case GridType.Triangle: distBetweenCells = cellSize / Mathf.Sqrt(3); break;
+                default: distBetweenCells = cellSize; break;
+            }
         }
 
         private void DrawGrid()
