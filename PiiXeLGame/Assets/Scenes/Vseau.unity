@@ -2218,9 +2218,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originX: 0
-  originY: 0
+  originY: 2.39
   originEquipmentX: 1.83
-  originEquipmentY: 0.73
+  originEquipmentY: 2.23
   emptySlot: {fileID: 3696826023717488614, guid: f5144b0d4a2654ea0ac8ee2558991228, type: 3}
   selector: {fileID: 767173457}
   itemDescriptionText: {fileID: 1945343038}
@@ -2440,7 +2440,7 @@ MonoBehaviour:
   speedBoost: 0
   sleepBoost: 0
   grid: {fileID: 0}
-  bodypart: 2
+  bodypart: 1
 --- !u!4 &1429525977
 Transform:
   m_ObjectHideFlags: 0

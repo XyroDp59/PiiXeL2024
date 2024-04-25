@@ -147,7 +147,7 @@ namespace Script.Inventory
             foreach (var possessedEquipment in _equipmentDic)
             {
                 possessedEquipment.Value.DrawItemInIventory(_itemPos);
-                _itemPos.y += itemSize.y;
+                _itemPos.y -= itemSize.y;
             }
 
             _itemPos.x = originX;
@@ -163,7 +163,7 @@ namespace Script.Inventory
                 if (iter % colCount == 0)
                 {
                     _itemPos.x = originX;
-                    _itemPos.y += itemSize.y;
+                    _itemPos.y -= itemSize.y;
                 }
                 else
                 {
@@ -220,6 +220,7 @@ namespace Script.Inventory
 
         public void ChangeSelection(int verticalAmount, int horizontalAmount)
         {
+            verticalAmount = -verticalAmount;
             int equipmentAmount = _equipmentDic.Count;
             int itemAmount = _bag.Count;
             int lastRawAmount = itemAmount % colCount;
