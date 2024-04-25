@@ -14,8 +14,9 @@ namespace Script.Inventory
         public Body bodypart;
         public enum Body //I added these parts by default, feel free to change
         {
-            Hand,
+            Head,
             Torso,
+            Hand,
             Pants,
             Shoes,
             Accessory
