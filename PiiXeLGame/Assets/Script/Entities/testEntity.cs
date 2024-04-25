@@ -17,5 +17,10 @@ namespace Script.Entities
             n++;
             //throw new System.NotImplementedException();
         }
+
+        public override void previewActionInMoveset()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
