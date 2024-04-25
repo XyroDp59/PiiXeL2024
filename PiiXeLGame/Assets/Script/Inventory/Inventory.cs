@@ -121,7 +121,6 @@ namespace Script.Inventory
             EquipmentItem.Body equipmentType = equippedItem.bodypart;
             if (_bag.Contains(equippedItem))
             {
-                RemoveFromInventory(equippedItem);
                 foreach (var equipment in _equipmentDic)
                 {
                     if (equipment.Value.bodypart == equippedItem.bodypart)
@@ -130,7 +129,7 @@ namespace Script.Inventory
                         break;
                     }
                 }
-
+                RemoveFromInventory(equippedItem);
                 _equipmentDic[equipmentType] = equippedItem;
             }
 
