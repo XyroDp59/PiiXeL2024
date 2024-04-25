@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IHealthSystem
 {
 
     /** TODO
@@ -29,20 +29,30 @@ public class Player : MonoBehaviour
      * 
      */
 
-    public PlayerHealth Health;
+    [SerializeField] private int maxHealth = 100;
+    private int _health;
 
     private int currentLevel = 0;
-    [SerializeField] private int defaultMaxExp;
+    [SerializeField] private int defaultMaxExp = 100;
     private int currentMaxExp;
     private int currentExp;
 
-    private Grid currentGrid;
+    public Script.GridSystem.GameGrid currentGrid;
     private List<GridPlayer> gridPlayersList;
+    private GridPlayer currentGridPlayer;
 
-    
+    public static Player Singleton { get; private set; }
+
+    private void Awake()
+    {
+        Singleton = this;
+        _health = maxHealth;
+    }
 
     private void choseNextMove() {
-        
+        float dirX = Input.GetAxisRaw("Horizontal");
+        currentGridPlayer.moveIndex += (int)(dirX / Mathf.Abs(dirX));
+        if (Input.GetButtonDown("Fire1")) { currentGridPlayer.doActionInMoveset(); }
     }
 
     public void gainExp(int exp) {
@@ -50,27 +60,30 @@ public class Player : MonoBehaviour
         if(currentExp > currentMaxExp)
         {
             currentLevel += 1;
-            currentMaxExp = defaultMaxExp * currentLevel;
+            currentMaxExp = (defaultMaxExp * currentLevel);  
             currentExp = 0;
             BuyNewSkillSet();
         }
     }
 
 
-
     private void BuyNewSkillSet() { 
         //TODO
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void Die()
     {
-
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddToHealth(int health)
     {
-        
+        _health += health;
+        if (_health > maxHealth) { _health = maxHealth; }
+        if (_health <= 0)
+        {
+            _health = 0;
+            Die();
+        }
     }
 }

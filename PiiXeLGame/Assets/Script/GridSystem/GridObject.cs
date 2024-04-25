@@ -6,7 +6,7 @@ namespace Script.GridSystem
 {
     public class GridObject : MonoBehaviour, IHoverable, IClickable, IRightClickable, IContactable
     {
-        [SerializeField] private bool isVisible;
+        [SerializeField] protected bool isVisible;
         [SerializeField] protected GameGrid grid;
         [SerializeField] private GameObject portal;
         [SerializeField] private bool blockCurrentCase;
@@ -86,10 +86,8 @@ namespace Script.GridSystem
                     if (position.x == cellPosition.x) theta = Mathf.Sign(cellPosition.y - position.y) * Mathf.PI / 2f;
                     else theta = Mathf.Atan((cellPosition.y - position.y) / (cellPosition.x - position.x));
                     if (position.x - cellPosition.x < 0) theta += Mathf.PI;
-                    Debug.Log(theta / Mathf.PI + " - " + theta % (Mathf.PI / 3f) + " - " + (-1f/6f));
                     theta += 2 * Mathf.PI;
                     theta -= theta % (Mathf.PI/3f) - Mathf.PI/6f;
-                    Debug.Log(theta / Mathf.PI);
                     cellPosition += grid.cellSize * sqrt3/3f * new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0);
                 }
             }
@@ -100,7 +98,8 @@ namespace Script.GridSystem
 
         public void ToggleVisibility()
         {
-            isVisible = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Portal")) != null;
+            //isVisible = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Portal")) != null;
+            isVisible = Player.Singleton.currentGrid == grid;
             _spriteRenderer.enabled = isVisible;
             _collider2D.enabled = isVisible;
         }

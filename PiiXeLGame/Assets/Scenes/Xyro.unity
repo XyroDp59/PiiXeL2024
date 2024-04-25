@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84fda228233904f41934d50d5b524843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridType: 2
+  gridType: 1
   gridSize: 5
   cellSize: 5
   distBetweenCells: 0
@@ -367,8 +367,8 @@ MonoBehaviour:
   grid: {fileID: 548338898}
   portal: {fileID: 0}
   blockCurrentCase: 0
-  actionFrequency: 40
-  movementSpeed: 5
+  actionFrequency: 30
+  movementSpeed: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

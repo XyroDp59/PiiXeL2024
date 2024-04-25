@@ -12,11 +12,15 @@ namespace Script.Entities
 
         private Vector2 prevPos;
         private bool isMoving = false;
+
+        public bool hasFinishedAction { get; protected set; } = false;
+
         public float actionBar { get; private set; } = 0;
         private float currRotation;
 
         private List<IAction> moveset;
         abstract public void doActionInMoveset();
+        abstract public void previewActionInMoveset();
 
         private void Start()
         {
@@ -62,7 +66,7 @@ namespace Script.Entities
             {
                 if (Vector3.Distance(prevPos, transform.position) < grid.distBetweenCells)
                 {
-                    transform.position += new Vector3(Mathf.Cos(currRotation), Mathf.Sin(currRotation), 0) * movementSpeed * Time.deltaTime;
+                    transform.position += new Vector3(Mathf.Cos(currRotation), Mathf.Sin(currRotation), 0) * movementSpeed * (grid.distBetweenCells/grid.cellSize) * Time.deltaTime;
                 }
 
                 else
@@ -70,7 +74,6 @@ namespace Script.Entities
                     isMoving = false;
                     currRotation += Mathf.PI;
                     currRotation %= 2 * Mathf.PI;
-                    Debug.Log("change de dir");
                     prevPos = transform.position;
 
                     ForcePositionOntoGrid();
