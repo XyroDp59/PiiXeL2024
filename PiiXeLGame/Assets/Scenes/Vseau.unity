@@ -2440,7 +2440,7 @@ MonoBehaviour:
   speedBoost: 0
   sleepBoost: 0
   grid: {fileID: 0}
-  bodypart: 1
+  bodypart: 2
 --- !u!4 &1429525977
 Transform:
   m_ObjectHideFlags: 0
